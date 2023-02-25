@@ -1,0 +1,17 @@
+---
+#
+# xdg base directory
+#
+
+xdg_config_home: $HOME/.config
+xdg_cache_home: $HOME/.cache
+xdg_data_home: $HOME/.local/share
+xdg_state_home: $HOME/.local/state
+
+editor: /usr/bin/vim
+
+#
+# ZSH
+#
+
+zdotdir: "{{ xdg_config_home }}/zsh"

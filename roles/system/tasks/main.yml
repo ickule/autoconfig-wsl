@@ -1,0 +1,8 @@
+---
+- name: Update system
+  become: true
+  ansible.builtin.apt:
+    upgrade: full
+    update_cache: true
+    autoclean: true
+    autoremove: true

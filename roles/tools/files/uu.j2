@@ -1,0 +1,41 @@
+#!/bin/bash
+
+ORIG_DIR=$(pwd)
+ZSH_PLUGIN=( powerlevel10k zsh-completions )
+PYTHON_MODULES=( pip wheel setuptools qmk )
+
+echo "#####"
+echo "Updating Ubuntu system"
+sudo apt update
+sudo apt upgrade -y
+sudo apt autopurge -y
+echo -e "\n"
+
+echo "#####"
+echo "Updating python modules"
+for i in "${PYTHON_MODULES[@]}"
+do
+   :
+   python3 -m pip install --user --upgrade $i
+done
+echo -e "\n"
+
+echo "#####"
+echo "Updating qmk"
+cd ~/workspaces/qmk_firmware
+git pull
+git submodule update
+cd $ORIG_DIR
+echo -e "\n"
+
+echo "#####"
+echo "Updating zsh plugins"
+for i in "${ZSH_PLUGIN[@]}"
+do
+   :
+   cd ~/.local/share/$i
+   git pull
+done
+cd $ORIG_DIR
+echo -e "\n"
+exec zsh

@@ -1,0 +1,13 @@
+export PATH="$HOME/.local/bin:$PATH"
+
+export XDG_CONFIG_HOME="{{ xdg_config_home }}"
+export XDG_CACHE_HOME="{{ xdg_cache_home }}"
+export XDG_DATA_HOME="{{ xdg_data_home }}"
+export XDG_STATE_HOME="{{ xdg_state_home }}"
+
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export HISTSIZE="10000"
+export SAVEHIST="10000"
+export HISTDUP="erase"
+
+export EDITOR="{{ editor }}"

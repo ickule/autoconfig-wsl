@@ -1,0 +1,39 @@
+---
+- name: Install development tools
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ansible # Ansible support
+      - ansible-lint # Ansible lint support
+      - python3 # Python support
+      - python3-pip # pip support for Python
+      - python3-setuptools # setuptools support for Python
+      - python3-wheel # wheel support for Python
+      - python-is-python3
+      - texlive-extra-utils
+      - texlive-fonts-extra # Extra font support for LaTeX
+      - texlive-latex-extra # Extra support for LaTeX
+      - texlive-xetex # xelatex support
+      - git # Git support
+
+- name: Create $XDG_CONFIG_HOME/python folder
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/python"
+    state: directory
+    mode: 0755
+
+- name: Copy pythonrc user config file to $XDG_CONFIG_HOME/python
+  ansible.builtin.copy:
+    src: "{{ item }}.j2"
+    dest: "{{ xdg_config_home }}/python/{{ item }}"
+    mode: 0644
+  with_items:
+    - pythonrc
+
+- name: Copy custom update script to local bin
+  ansible.builtin.copy:
+    src: "{{ item }}.j2"
+    dest: "$HOME/.local/bin/{{ item }}"
+    mode: 0744
+  with_items:
+    - uu

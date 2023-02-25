@@ -1,0 +1,67 @@
+---
+- name: Install zsh
+  become: true
+  ansible.builtin.apt:
+    name:
+      - zsh
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
+
+- name: Create $XDG_DATA_HOME folder
+  ansible.builtin.file:
+    path: "{{ xdg_data_home }}"
+    state: directory
+    mode: 0755
+
+- name: install powerlevel10k
+  ansible.builtin.git:
+    repo: "https://github.com/romkatv/powerlevel10k.git"
+    dest: ~/.local/share/powerlevel10k
+    version: master
+
+- name: install zsh-completions
+  ansible.builtin.git:
+    repo: "https://github.com/zsh-users/zsh-completions.git"
+    dest: ~/.local/share/zsh-completions
+    version: master
+
+- name: Modify the current user to use zsh
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /usr/bin/zsh
+
+- name: Make sure group wheel is not in the sudoers configuration
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/zsh/zshenv
+    line: export ZDOTDIR="$HOME/.config/zsh"
+
+- name: Create $ZDOTDIR folder
+  ansible.builtin.file:
+    path: "{{ zdotdir }}"
+    state: directory
+    mode: 0755
+
+- name: Create $XDG_CACHE_HOME/zsh/ folder
+  ansible.builtin.file:
+    path: "{{ xdg_cache_home }}/zsh"
+    state: directory
+    mode: 0755
+
+- name: Copy ZSH user config templates to $ZDOTDIR
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ zdotdir }}/{{ item }}"
+    mode: 0644
+  with_items:
+    - .zshenv
+    - .zshrc
+
+- name: Copy p10k user config templates to $ZDOTDIR
+  ansible.builtin.copy:
+    src: "{{ item }}.j2"
+    dest: "{{ zdotdir }}/{{ item }}"
+    mode: 0644
+  with_items:
+    - .p10k.zsh

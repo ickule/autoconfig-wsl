@@ -1,0 +1,8 @@
+---
+- name: Auto configuration
+  hosts: localhost
+
+  roles:
+    - role: system
+    - role: shell
+    - role: tools
